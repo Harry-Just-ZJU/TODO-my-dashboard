@@ -22,13 +22,13 @@
                 <div class="header-section">
                     <h2 id="textDailyTitle">📅 每日任务池</h2>
                     <select id="daySelector" onchange="changeDay()">
-                        <option value="Monday" id="optMon">星期一</option>
-                        <option value="Tuesday" id="optTue">星期二</option>
-                        <option value="Wednesday" id="optWed">星期三</option>
-                        <option value="Thursday" id="optThu">星期四</option>
-                        <option value="Friday" id="optFri">星期五</option>
-                        <option value="Saturday" id="optSat">星期六</option>
-                        <option value="Sunday" id="optSun">星期日</option>
+                        <option value="Monday">星期一</option>
+                        <option value="Tuesday">星期二</option>
+                        <option value="Wednesday">星期三</option>
+                        <option value="Thursday">星期四</option>
+                        <option value="Friday">星期五</option>
+                        <option value="Saturday">星期六</option>
+                        <option value="Sunday">星期日</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -49,11 +49,11 @@
                 <ul id="projectList"></ul>
 
                 <div class="config-tools">
-                    <a href="config.html" class="btn-config-link">⚙️ 制作我的课表</a>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <button onclick="exportConfig()" class="btn-mini-tool">📤 备份</button>
-                        <label class="btn-mini-tool" style="background:#e67e22; cursor:pointer;">
-                            📥 恢复 <input type="file" id="importFile" onchange="importConfig(event)" style="display:none;"/>
+                    <button class="btn-tool" id="btnSettings" onclick="openSettings()">⚙️ 我的课表管理</button>
+                    <div class="tool-group">
+                        <button class="btn-tool-small" id="btnBackup" onclick="exportConfig()" title="导出 JSON 配置">📤 备份数据</button>
+                        <label class="btn-tool-small btn-upload" title="导入 JSON 配置">
+                            <span id="textRestore">📥 恢复数据</span> <input type="file" id="importFile" onchange="importConfig(event)" accept=".json" style="display:none;"/>
                         </label>
                     </div>
                 </div>
@@ -73,6 +73,56 @@
                 <h3 id="textStoreTitle">🎁 奖励兑换中心</h3>
             </div>
             <div id="storeList" class="store-grid"></div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-content settings-content">
+            <button class="close-btn" onclick="closeSettings()">×</button>
+            <div class="modal-header">
+                <h3 id="textSettingsTitle">⚙️ 课表排版引擎</h3>
+            </div>
+            
+            <select id="settingRepeat" onchange="toggleSettingDay()">
+                    <option value="single">单次 (仅特定日期)</option>
+                    <option value="workday">工作日重复 (周一至周五)</option>
+                    <option value="weekend">周末重复 (周六至周日)</option>
+                    <option value="everyday">每天重复</option>
+                    <option value="custom">自定义 (多选)</option> </select>
+
+                <select id="settingDay" onchange="renderSettingCourses()">
+                    <option value="Monday">星期一</option>
+                    <option value="Tuesday">星期二</option>
+                    <option value="Wednesday">星期三</option>
+                    <option value="Thursday">星期四</option>
+                    <option value="Friday">星期五</option>
+                    <option value="Saturday">星期六</option>
+                    <option value="Sunday">星期日</option>
+                </select>
+
+                <div id="customDaysWrapper" class="custom-days-group" style="display: none;">
+                    <label><input type="checkbox" value="Monday" class="custom-day-cb"> <span class="cb-lbl">一</span></label>
+                    <label><input type="checkbox" value="Tuesday" class="custom-day-cb"> <span class="cb-lbl">二</span></label>
+                    <label><input type="checkbox" value="Wednesday" class="custom-day-cb"> <span class="cb-lbl">三</span></label>
+                    <label><input type="checkbox" value="Thursday" class="custom-day-cb"> <span class="cb-lbl">四</span></label>
+                    <label><input type="checkbox" value="Friday" class="custom-day-cb"> <span class="cb-lbl">五</span></label>
+                    <label><input type="checkbox" value="Saturday" class="custom-day-cb"> <span class="cb-lbl">六</span></label>
+                    <label><input type="checkbox" value="Sunday" class="custom-day-cb"> <span class="cb-lbl">日</span></label>
+                </div>
+
+                <input type="text" id="courseName" placeholder="课程名称 (例: 高等数学)">
+                
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="time" id="courseStartTime" style="flex: 1;" required>
+                    <span style="color:#8e8e93; font-size:14px; font-weight:bold;">至</span>
+                    <input type="time" id="courseEndTime" style="flex: 1;" required>
+                </div>
+                
+                <button class="btn-push" id="btnAddCourse" style="width: 100%; margin-top: 10px;" onclick="saveCourse()">➕ 批量添加至时间轴</button>
+            </div>
+
+            <div class="setting-list-header" id="textExistingClasses">当前预览日已有课程：</div>
+            <ul id="settingCourseList" class="setting-course-list"></ul>
         </div>
     </div>
 
