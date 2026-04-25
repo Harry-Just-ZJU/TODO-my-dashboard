@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的全能仪表盘 | My Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="petal-container"></div>
+
+    <div class="top-controls">
+        <button class="mini-lang-btn" onclick="toggleLanguage()" id="langBtnText">EN</button>
+        <div class="score-board" onclick="toggleStore()" title="点击打开奖励商城">
+            <span id="textScore">✨ 积分: </span><span id="scoreDisplay">0</span> <span style="font-size: 16px;">🎁</span>
+        </div>
+    </div>
+
+    <div class="main-layout container">
+        
+        <div class="left-column">
+            <div class="dashboard-panel">
+                <div class="header-section">
+                    <h2 id="textDailyTitle">📅 每日任务池</h2>
+                    <select id="daySelector" onchange="changeDay()">
+                        <option value="Monday" id="optMon">星期一</option>
+                        <option value="Tuesday" id="optTue">星期二</option>
+                        <option value="Wednesday" id="optWed">星期三</option>
+                        <option value="Thursday" id="optThu">星期四</option>
+                        <option value="Friday" id="optFri">星期五</option>
+                        <option value="Saturday" id="optSat">星期六</option>
+                        <option value="Sunday" id="optSun">星期日</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="dailyInput" placeholder="输入待办任务..." onkeypress="if(event.key === 'Enter') addDailyTask()">
+                    <button id="btnAddDaily" onclick="addDailyTask()">添加</button>
+                </div>
+                <div class="drag-hint" id="textDragHint">💡 提示：按住任务可以拖拽到右侧时间轴</div>
+                <ul id="dailyList"></ul>
+            </div>
+
+            <div class="dashboard-panel project-panel">
+                <h2 id="textProjectTitle" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 10px; margin-bottom: 20px;">🚀 长期计划</h2>
+                <div class="input-group">
+                    <input type="text" id="projectInput" placeholder="输入长期目标..." onkeypress="if(event.key === 'Enter') addProject()">
+                    <input type="date" id="projectDdl" title="设置 DDL">
+                    <button id="btnBuildProj" style="background-color: #9b59b6;" onclick="addProject()">建立</button>
+                </div>
+                <ul id="projectList"></ul>
+            </div>
+        </div>
+
+        <div class="right-column dashboard-panel timeline-panel">
+            <h2 id="textTimelineTitle" style="margin-bottom: 20px;">⏱️ 今日时间轴 (08:00 - 23:00)</h2>
+            <div class="timeline-container" id="timelineContainer">
+                </div>
+        </div>
+
+    </div>
+
+    <div id="storeModal" class="modal-overlay hidden">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h3 id="textStoreTitle" style="margin: 0;">🎁 奖励兑换中心</h3>
+                <button class="close-btn" onclick="toggleStore()">×</button>
+            </div>
+            <div id="storeList" class="store-grid"></div>
+        </div>
+    </div>
+
+    <script src="schedule.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

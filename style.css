@@ -1,0 +1,305 @@
+/* ========================================== */
+/* --- 1. 基础与全局滚动配置 --- */
+/* ========================================== */
+body { 
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; 
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); 
+    min-height: 100vh; 
+    margin: 0; 
+    color: #333; 
+    padding: 80px 40px 60px 40px; 
+    box-sizing: border-box; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+}
+
+/* 樱花背景固定 */
+#petal-container { 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    pointer-events: none; 
+    z-index: 0; 
+}
+
+.petal { 
+    position: absolute; 
+    background-color: #ffd1dc; 
+    border-radius: 15px 0px 15px 0px; 
+    opacity: 0.8; 
+    animation: fall linear infinite; 
+}
+
+@keyframes fall { 
+    0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; } 
+    100% { top: 110%; transform: translateX(150px) rotate(360deg); opacity: 0.2; } 
+}
+
+/* ========================================== */
+/* --- 2. 顶部控制区 (固定) --- */
+/* ========================================== */
+.top-controls { 
+    position: fixed; 
+    top: 20px; right: 40px; 
+    display: flex; gap: 15px; 
+    z-index: 100; 
+}
+.mini-lang-btn { 
+    background: rgba(255,255,255,0.7); 
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255,255,255,0.6); 
+    color: #a18cd1; 
+    font-weight: bold; 
+    padding: 6px 14px; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: 0.2s; 
+}
+.score-board { 
+    background: rgba(255,255,255,0.8); 
+    backdrop-filter: blur(10px); 
+    padding: 10px 20px; 
+    border-radius: 30px; 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #f39c12; 
+    border: 1px solid rgba(255,255,255,0.6); 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+.score-board.bump { transform: scale(1.1); color: #e74c3c; }
+
+/* ========================================== */
+/* --- 3. 全局双栏布局 (550px 比例) --- */
+/* ========================================== */
+.main-layout { 
+    display: grid; 
+    grid-template-columns: 550px 1fr; 
+    gap: 30px; 
+    width: 100%; 
+    max-width: 1700px; 
+    margin: 0 auto; 
+    height: auto; 
+    z-index: 1; 
+    position: relative; 
+}
+
+.left-column { display: flex; flex-direction: column; gap: 20px; }
+
+.dashboard-panel { 
+    background: rgba(255, 255, 255, 0.65); 
+    backdrop-filter: blur(15px); 
+    border: 1px solid rgba(255, 255, 255, 0.4); 
+    border-radius: 20px; 
+    padding: 25px; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06); 
+}
+
+/* ========================================== */
+/* --- 4. 任务池与长期计划组件 --- */
+/* ========================================== */
+.header-section { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(161, 140, 209, 0.1); padding-bottom: 12px; margin-bottom: 20px; }
+h2 { margin: 0; color: #4a4a4a; font-size: 22px; }
+
+.input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+input[type="text"], input[type="date"], select { 
+    padding: 12px; 
+    border: none; 
+    border-radius: 10px; 
+    background: rgba(255,255,255,0.6); 
+    outline: none; 
+    font-size: 14px;
+}
+
+button { 
+    padding: 10px 18px; 
+    background-color: #a18cd1; 
+    color: white; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    transition: 0.3s; 
+}
+button:hover { background-color: #8e74c9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(161, 140, 209, 0.3); }
+
+/* 通用卡片样式 */
+li { 
+    background: rgba(255, 255, 255, 0.85); 
+    border: 1px solid rgba(255, 255, 255, 0.6); 
+    margin-bottom: 15px; 
+    border-radius: 15px; 
+    padding: 20px; 
+    border-left: 6px solid #a18cd1; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+    transition: 0.3s;
+}
+
+/* 长期项目专用布局 (左右对齐核心) */
+.project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.project-title-group { display: flex; justify-content: space-between; align-items: center; flex: 1; margin-right: 15px; }
+.project-title { font-weight: bold; font-size: 16px; color: #333; }
+
+.ddl-badge { 
+    font-size: 12px; 
+    background: rgba(161, 140, 209, 0.12); 
+    color: #7d5fb2; 
+    padding: 4px 10px; 
+    border-radius: 6px; 
+    font-weight: 500; 
+    border: 1px solid rgba(161, 140, 209, 0.15);
+}
+
+.btn-delete-icon { background: none !important; border: none !important; cursor: pointer; opacity: 0.3; transition: 0.3s; font-size: 14px; }
+.btn-delete-icon:hover { opacity: 1; transform: scale(1.2); }
+
+.progress-container { background: rgba(0,0,0,0.06); height: 8px; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+.progress-bar { height: 100%; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+
+.project-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.progress-num { font-size: 13px; color: #95a5a6; font-weight: bold; }
+.btn-push { background-color: #a18cd1 !important; padding: 6px 16px !important; border-radius: 20px !important; font-size: 12px !important; }
+
+/* ========================================== */
+/* --- 5. 时间轴系统 (遮挡修复与全屏平铺) --- */
+/* ========================================== */
+.timeline-panel { height: auto; }
+.timeline-container { position: relative; height: 960px; } /* 16小时 * 60px */
+
+.time-slot { display: flex; border-top: 1px dashed rgba(161, 140, 209, 0.15); height: 60px; box-sizing: border-box; }
+.time-label { width: 60px; font-size: 13px; color: #8e74c9; font-weight: bold; padding-top: 5px; text-align: right; padding-right: 15px; }
+.drop-zone { flex: 1; border-left: 2px solid rgba(161, 140, 209, 0.1); position: relative; }
+
+.timeline-block { 
+    position: absolute; 
+    left: 75px; 
+    right: 20px; 
+    border-radius: 10px; 
+    padding: 12px 15px; 
+    color: #fff; 
+    box-shadow: 0 6px 20px rgba(161, 140, 209, 0.2); 
+    z-index: 5; 
+    display: flex; 
+    flex-direction: column;
+    box-sizing: border-box; 
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.block-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+.block-time { font-size: 11px; opacity: 0.9; }
+
+/* --- 弹窗与商城 --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-overlay.hidden { display: none; }
+.modal-content { background: rgba(255,255,255,0.9); width: 450px; border-radius: 24px; padding: 30px; box-shadow: 0 25px 60px rgba(0,0,0,0.1); }
+
+/* 拆解按钮样式 */
+.btn-decompose {
+    background-color: rgba(161, 140, 209, 0.1) !important;
+    color: #a18cd1 !important;
+    border: 1px solid rgba(161, 140, 209, 0.3) !important;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: none !important;
+}
+
+.btn-decompose:hover {
+    background-color: #a18cd1 !important;
+    color: white !important;
+}
+
+/* ========================================== */
+/* --- 商店弹窗精致化重塑 --- */
+/* ========================================== */
+
+/* 遮罩层：全屏毛玻璃 */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+/* 弹窗主体 */
+.modal-content {
+    background: rgba(255, 255, 255, 0.9);
+    width: 450px;
+    border-radius: 28px;
+    padding: 30px;
+    position: relative; /* 为关闭按钮定位 */
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* 标题栏 */
+.modal-header {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* 彻底修复：右上角悬浮的关闭按钮 */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.05) !important;
+    color: #888 !important;
+    width: 32px;
+    height: 32px;
+    border-radius: 50% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px !important;
+    cursor: pointer;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+.close-btn:hover { background: #ff6b6b !important; color: white !important; }
+
+/* 商品条目列表 */
+.store-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.store-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.item-info { display: flex; align-items: center; gap: 15px; }
+.item-name { font-weight: bold; color: #2c3e50; font-size: 16px; }
+.item-cost { color: #f39c12; font-size: 14px; font-weight: bold; margin-top: 2px; }
+
+/* 兑换按钮 */
+.btn-redeem {
+    background: #f39c12 !important;
+    color: white !important;
+    padding: 8px 18px !important;
+    font-size: 14px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 10px rgba(243, 156, 18, 0.2) !important;
+}
+.btn-redeem:disabled {
+    background: #d1d1d6 !important;
+    box-shadow: none !important;
+    opacity: 0.6;
+}
