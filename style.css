@@ -148,3 +148,26 @@ li:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.05);
 
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: rgba(161, 140, 209, 0.4); border-radius: 10px; }
+
+/* ========================================== */
+/* --- 长期目标：动态 DDL 与双动作按钮样式 --- */
+/* ========================================== */
+
+/* 动态 DDL 容器（使用透明 Input 覆盖在 Badge 上实现无缝点击） */
+.ddl-container { position: relative; display: inline-flex; align-items: center; }
+.ddl-input-hidden { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.ddl-badge.empty { background: transparent; border: 1px dashed #a18cd1; color: #a18cd1; }
+.ddl-container:hover .ddl-badge { background: rgba(161, 140, 209, 0.2); transform: translateY(-1px); }
+
+/* 右上角操作区对齐 */
+.project-actions { display: flex; gap: 8px; align-items: center; }
+.btn-icon { background: none; border: none; padding: 4px; cursor: pointer; border-radius: 6px; transition: 0.2s; font-size: 16px; display: flex; justify-content: center; align-items: center;}
+.btn-icon:hover { transform: scale(1.15); }
+
+/* 完成按钮 ✅ */
+.btn-complete { filter: grayscale(100%); opacity: 0.6; }
+.btn-complete:hover { filter: grayscale(0%); opacity: 1; background: rgba(46, 204, 113, 0.1); }
+
+/* 删除/取消按钮 🗑️ */
+.btn-delete { filter: grayscale(100%); opacity: 0.5; }
+.btn-delete:hover { filter: grayscale(0%); opacity: 1; background: rgba(231, 76, 60, 0.1); }

@@ -11,7 +11,7 @@
 
     <div class="top-controls">
         <button class="mini-lang-btn" onclick="toggleLanguage()" id="langBtnText">EN</button>
-        <div class="score-board" onclick="toggleStore()" title="点击打开奖励商城">
+        <div class="score-board" id="scoreBoard" onclick="toggleStore()" title="点击打开奖励商城">
             <span id="textScore">✨ 积分: </span><span id="scoreDisplay">0</span> 🎁
         </div>
     </div>
@@ -52,7 +52,7 @@
                     <button class="btn-tool" id="btnSettings" onclick="openSettings()">⚙️ 我的课表管理</button>
                     <div class="tool-group">
                         <button class="btn-tool-small" id="btnBackup" onclick="exportConfig()" title="导出 JSON 配置">📤 备份数据</button>
-                        <label class="btn-tool-small btn-upload" title="导入 JSON 配置">
+                        <label class="btn-tool-small btn-upload" id="lblRestore" title="导入 JSON 配置">
                             <span id="textRestore">📥 恢复数据</span> <input type="file" id="importFile" onchange="importConfig(event)" accept=".json" style="display:none;"/>
                         </label>
                     </div>
@@ -83,12 +83,14 @@
                 <h3 id="textSettingsTitle">⚙️ 课表排版引擎</h3>
             </div>
             
-            <select id="settingRepeat" onchange="toggleSettingDay()">
+            <div class="settings-form">
+                <select id="settingRepeat" onchange="toggleSettingDay()">
                     <option value="single">单次 (仅特定日期)</option>
                     <option value="workday">工作日重复 (周一至周五)</option>
                     <option value="weekend">周末重复 (周六至周日)</option>
                     <option value="everyday">每天重复</option>
-                    <option value="custom">自定义 (多选)</option> </select>
+                    <option value="custom">自定义 (多选)</option>
+                </select>
 
                 <select id="settingDay" onchange="renderSettingCourses()">
                     <option value="Monday">星期一</option>

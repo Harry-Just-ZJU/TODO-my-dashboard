@@ -9,7 +9,10 @@ const i18n = {
         placeholderDaily: "输入待办任务...", placeholderProject: "目标...",
         btnSettings: "⚙️ 我的课表管理", btnBackup: "📤 备份数据", btnRestore: "📥 恢复数据",
         settingsTitle: "⚙️ 课表排版引擎", placeholderCourse: "课程名称 (例: 高等数学)",
-        btnAddCourse: "➕ 批量添加至时间轴", textExistingClasses: "当前预览日已有课程："
+        btnAddCourse: "➕ 批量添加至时间轴", textExistingClasses: "当前预览日已有课程：",
+        addDdl: "添加 DDL", finishProj: "太棒了！确定要完成这个长期目标吗？(将获得 50 积分！)", cancelProj: "确定要取消并删除这个目标吗？(不会扣除积分)",
+        tooltipComplete: "完成目标", tooltipCancel: "取消目标", titleStore: "点击打开奖励商城", titleBackup: "导出 JSON 配置", titleRestore: "导入 JSON 配置", titleDdl: "点击修改 DDL",
+        titleDatePicker: "选择截止日期" // 新增：覆盖浏览器原生日历提示
     },
     en: {
         dailyTitle: "📅 Task Pool", projectTitle: "🚀 Long-term Plans", timelineTitle: "⏱️ Timeline",
@@ -21,7 +24,10 @@ const i18n = {
         placeholderDaily: "Enter task...", placeholderProject: "Goal...",
         btnSettings: "⚙️ Schedule Settings", btnBackup: "📤 Backup Data", btnRestore: "📥 Restore Data",
         settingsTitle: "⚙️ Schedule Engine", placeholderCourse: "Course Name (e.g. Math)",
-        btnAddCourse: "➕ Batch Add to Timeline", textExistingClasses: "Existing classes on preview day:"
+        btnAddCourse: "➕ Batch Add to Timeline", textExistingClasses: "Existing classes on preview day:",
+        addDdl: "Add DDL", finishProj: "Awesome! Complete this long-term goal? (+50 points!)", cancelProj: "Cancel and delete this goal? (No points deducted)",
+        tooltipComplete: "Complete Goal", tooltipCancel: "Cancel Goal", titleStore: "Click to open Reward Store", titleBackup: "Export JSON config", titleRestore: "Import JSON config", titleDdl: "Click to edit DDL",
+        titleDatePicker: "Select deadline" // 新增：覆盖浏览器原生日历提示
     }
 };
 
@@ -56,7 +62,6 @@ function toggleLanguage() {
 function applyLanguage() {
     const t = i18n[currentLang];
     
-    // 主界面翻译
     document.getElementById('textDailyTitle').textContent = t.dailyTitle;
     document.getElementById('textProjectTitle').textContent = t.projectTitle;
     document.getElementById('textTimelineTitle').textContent = t.timelineTitle;
@@ -66,34 +71,35 @@ function applyLanguage() {
     document.getElementById('langBtnText').textContent = t.langBtn;
     document.getElementById('textDragHint').textContent = t.dragHint;
     
-    // 占位符与底部工具栏
     document.getElementById('dailyInput').placeholder = t.placeholderDaily;
     document.getElementById('projectInput').placeholder = t.placeholderProject;
     document.getElementById('btnSettings').textContent = t.btnSettings;
     document.getElementById('btnBackup').textContent = t.btnBackup;
     document.getElementById('textRestore').textContent = t.btnRestore;
     
-    // 弹窗翻译
     document.getElementById('textSettingsTitle').textContent = t.settingsTitle;
     document.getElementById('courseName').placeholder = t.placeholderCourse;
     document.getElementById('btnAddCourse').textContent = t.btnAddCourse;
     document.getElementById('textExistingClasses').textContent = t.textExistingClasses;
 
-    // 星期下拉菜单翻译
+    // 悬浮提示翻译 (覆盖浏览器原生日期提示)
+    document.getElementById('scoreBoard').title = t.titleStore;
+    document.getElementById('btnBackup').title = t.titleBackup;
+    document.getElementById('lblRestore').title = t.titleRestore;
+    document.getElementById('projectDdl').title = t.titleDatePicker; 
+
     const selector = document.getElementById('daySelector');
     Array.from(selector.options).forEach(opt => opt.text = t.days[opt.value]);
     const settingSelector = document.getElementById('settingDay');
     Array.from(settingSelector.options).forEach(opt => opt.text = t.days[opt.value]);
     
-    // 重复模式与多选框翻译
     const repeatSelector = document.getElementById('settingRepeat');
     if (currentLang === 'en') {
         repeatSelector.options[0].text = "Single Day";
         repeatSelector.options[1].text = "Workdays (Mon-Fri)";
         repeatSelector.options[2].text = "Weekends (Sat-Sun)";
         repeatSelector.options[3].text = "Everyday";
-        repeatSelector.options[4].text = "Custom (Select Days)"; // 英文自定义
-        
+        repeatSelector.options[4].text = "Custom (Select Days)"; 
         const dayKeys = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         document.querySelectorAll('.cb-lbl').forEach((lbl, i) => lbl.textContent = dayKeys[i].substring(0,3));
     } else {
@@ -101,16 +107,13 @@ function applyLanguage() {
         repeatSelector.options[1].text = "工作日重复 (周一至周五)";
         repeatSelector.options[2].text = "周末重复 (周六至周日)";
         repeatSelector.options[3].text = "每天重复";
-        repeatSelector.options[4].text = "自定义 (多选)"; // 中文自定义
-        
+        repeatSelector.options[4].text = "自定义 (多选)"; 
         const zhDays = ['一', '二', '三', '四', '五', '六', '日'];
         document.querySelectorAll('.cb-lbl').forEach((lbl, i) => lbl.textContent = zhDays[i]);
     }
 
     renderAll();
-    if (!document.getElementById('settingsModal').classList.contains('hidden')) {
-        renderSettingCourses();
-    }
+    if (!document.getElementById('settingsModal').classList.contains('hidden')) renderSettingCourses();
 }
 
 function renderAll() { renderTasks(); renderProjects(); renderTimeline(); }
@@ -150,7 +153,6 @@ function toggleTask(index) {
 }
 function deleteTask(index) { db.schedule[currentDay].tasks.splice(index, 1); saveDB(); renderAll(); }
 
-// --- 时间转换辅助函数 ---
 function floatToTimeStr(floatVal) {
     const h = Math.floor(floatVal);
     const m = Math.round((floatVal - h) * 60);
@@ -166,7 +168,6 @@ function renderTimeline() {
     timelineContainer.innerHTML = '';
     const dayData = db.schedule[currentDay] || { classes: [], tasks: [] };
     
-    // 生成背景网格
     for (let i = 8; i <= 23; i++) {
         const slot = document.createElement('div');
         slot.className = 'time-slot';
@@ -174,11 +175,9 @@ function renderTimeline() {
         timelineContainer.appendChild(slot);
     }
     
-    // 精确渲染固定课程 (支持小数高度)
     dayData.classes?.forEach(cls => {
         const block = document.createElement('div');
         block.className = 'timeline-block';
-        
         const safeStart = Math.max(8, cls.startHour);
         const safeEnd = Math.min(24, cls.endHour);
         const duration = safeEnd - safeStart;
@@ -194,7 +193,6 @@ function renderTimeline() {
         timelineContainer.appendChild(block);
     });
     
-    // 渲染拖入的任务
     dayData.tasks?.forEach((task, index) => {
         if (task.scheduledHour !== null) {
             const block = document.createElement('div');
@@ -235,13 +233,23 @@ function renderProjects() {
     db.projects.forEach((proj, index) => {
         const li = document.createElement('li');
         const isDone = proj.progress === 100;
+        
+        const ddlText = proj.deadline ? `📅 ${proj.deadline}` : `📅 ${t.addDdl}`;
+        const ddlClass = proj.deadline ? 'ddl-badge' : 'ddl-badge empty';
+
         li.innerHTML = `
             <div class="project-header">
                 <div class="project-title-group">
                     <span class="project-title">${proj.title}</span>
-                    ${proj.deadline ? `<span class="ddl-badge">📅 ${proj.deadline}</span>` : ''}
+                    <div class="ddl-container" title="${t.titleDdl}">
+                        <span class="${ddlClass}">${ddlText}</span>
+                        <input type="date" class="ddl-input-hidden" title="${t.titleDdl}" value="${proj.deadline || ''}" onchange="updateProjectDDL(${index}, this.value)">
+                    </div>
                 </div>
-                <button onclick="deleteProject(${index})" class="btn-delete-icon">🗑️</button>
+                <div class="project-actions">
+                    <button onclick="finishProject(${index})" class="btn-icon btn-complete" title="${t.tooltipComplete}">✅</button>
+                    <button onclick="deleteProject(${index})" class="btn-icon btn-delete" title="${t.tooltipCancel}">🗑️</button>
+                </div>
             </div>
             <div class="progress-container"><div class="progress-bar" style="width:${proj.progress}%; background:${isDone?'#fbc2eb':'#a18cd1'}"></div></div>
             <div class="project-controls">
@@ -256,6 +264,22 @@ function renderProjects() {
     });
 }
 
+function updateProjectDDL(index, newDate) {
+    if (newDate) db.projects[index].deadline = newDate;
+    else delete db.projects[index].deadline;
+    saveDB(); renderProjects();
+}
+function finishProject(index) {
+    if (confirm(i18n[currentLang].finishProj)) {
+        db.score += 50; db.projects.splice(index, 1); saveDB(); renderAll();
+    }
+}
+function deleteProject(index) {
+    if (confirm(i18n[currentLang].cancelProj)) {
+        db.projects.splice(index, 1); saveDB(); renderProjects();
+    }
+}
+
 function decompose(title) {
     const prefix = i18n[currentLang].pushPrefix;
     if (!db.schedule[currentDay]) db.schedule[currentDay] = { classes: [], tasks: [] };
@@ -266,7 +290,6 @@ function decompose(title) {
 function addProgress(index) {
     if(db.projects[index].progress < 100) { db.projects[index].progress += 1; db.score += 2; saveDB(); renderProjects(); }
 }
-function deleteProject(index) { db.projects.splice(index, 1); saveDB(); renderProjects(); }
 
 function toggleStore() {
     const modal = document.getElementById('storeModal');
@@ -304,9 +327,6 @@ function redeemReward(index) {
     if (db.score >= item.cost) { db.score -= item.cost; saveDB(); alert(currentLang === 'zh' ? `兑换成功：${item.icon}！` : `Successfully redeemed: ${item.icon}!`); renderStore(); }
 }
 
-// -------------------------------------
-// 课表排版引擎核心逻辑
-// -------------------------------------
 function openSettings() {
     document.getElementById('settingsModal').classList.remove('hidden');
     document.getElementById('settingDay').value = currentDay;
@@ -380,30 +400,20 @@ function saveCourse() {
     else if (repeatMode === 'weekend') targetDays = ['Saturday', 'Sunday'];
     else if (repeatMode === 'everyday') targetDays = daysOfWeek;
     else if (repeatMode === 'custom') {
-        // 抓取所有打勾的复选框
         const checkboxes = document.querySelectorAll('.custom-day-cb:checked');
         checkboxes.forEach(cb => targetDays.push(cb.value));
-        
         if (targetDays.length === 0) {
             alert(currentLang === 'zh' ? "请至少勾选一天！" : "Please select at least one day!");
             return;
         }
     }
 
-    // 执行批量插入
     targetDays.forEach(day => {
         if(!db.schedule[day]) db.schedule[day] = {classes:[], tasks:[]};
-        db.schedule[day].classes.push({ 
-            text: name, 
-            startHour: startFloat,
-            endHour: endFloat, 
-            color: '#3498db' 
-        });
+        db.schedule[day].classes.push({ text: name, startHour: startFloat, endHour: endFloat, color: '#3498db' });
     });
 
-    saveDB(); 
-    renderSettingCourses(); 
-    renderTimeline();
+    saveDB(); renderSettingCourses(); renderTimeline();
     
     if(targetDays.length > 1) {
         alert(currentLang === 'zh' ? `已成功批量添加到 ${targetDays.length} 天！` : `Successfully added to ${targetDays.length} days!`);
@@ -417,9 +427,6 @@ function deleteSettingCourse(day, index) {
     saveDB(); renderSettingCourses(); renderTimeline(); 
 }
 
-// -------------------------------------
-// 系统辅助功能 (导出/导入/特效)
-// -------------------------------------
 function exportConfig() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
     const dl = document.createElement('a');
