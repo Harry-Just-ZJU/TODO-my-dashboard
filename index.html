@@ -12,12 +12,11 @@
     <div class="top-controls">
         <button class="mini-lang-btn" onclick="toggleLanguage()" id="langBtnText">EN</button>
         <div class="score-board" onclick="toggleStore()" title="点击打开奖励商城">
-            <span id="textScore">✨ 积分: </span><span id="scoreDisplay">0</span> <span style="font-size: 16px;">🎁</span>
+            <span id="textScore">✨ 积分: </span><span id="scoreDisplay">0</span> 🎁
         </div>
     </div>
 
-    <div class="main-layout container">
-        
+    <div class="main-layout">
         <div class="left-column">
             <div class="dashboard-panel">
                 <div class="header-section">
@@ -41,29 +40,37 @@
             </div>
 
             <div class="dashboard-panel project-panel">
-                <h2 id="textProjectTitle" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 10px; margin-bottom: 20px;">🚀 长期计划</h2>
+                <h2 id="textProjectTitle">🚀 长期计划</h2>
                 <div class="input-group">
-                    <input type="text" id="projectInput" placeholder="输入长期目标..." onkeypress="if(event.key === 'Enter') addProject()">
-                    <input type="date" id="projectDdl" title="设置 DDL">
-                    <button id="btnBuildProj" style="background-color: #9b59b6;" onclick="addProject()">建立</button>
+                    <input type="text" id="projectInput" placeholder="目标...">
+                    <input type="date" id="projectDdl">
+                    <button id="btnBuildProj" onclick="addProject()">建立</button>
                 </div>
                 <ul id="projectList"></ul>
+
+                <div class="config-tools">
+                    <a href="config.html" class="btn-config-link">⚙️ 制作我的课表</a>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button onclick="exportConfig()" class="btn-mini-tool">📤 备份</button>
+                        <label class="btn-mini-tool" style="background:#e67e22; cursor:pointer;">
+                            📥 恢复 <input type="file" id="importFile" onchange="importConfig(event)" style="display:none;"/>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="right-column dashboard-panel timeline-panel">
-            <h2 id="textTimelineTitle" style="margin-bottom: 20px;">⏱️ 今日时间轴 (08:00 - 23:00)</h2>
-            <div class="timeline-container" id="timelineContainer">
-                </div>
+            <h2 id="textTimelineTitle">⏱️ 今日时间轴</h2>
+            <div class="timeline-container" id="timelineContainer"></div>
         </div>
-
     </div>
 
     <div id="storeModal" class="modal-overlay hidden">
-        <div class="modal-content glass-effect">
+        <div class="modal-content">
+            <button class="close-btn" onclick="toggleStore()">×</button>
             <div class="modal-header">
-                <h3 id="textStoreTitle" style="margin: 0;">🎁 奖励兑换中心</h3>
-                <button class="close-btn" onclick="toggleStore()">×</button>
+                <h3 id="textStoreTitle">🎁 奖励兑换中心</h3>
             </div>
             <div id="storeList" class="store-grid"></div>
         </div>
