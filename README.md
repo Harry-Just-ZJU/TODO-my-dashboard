@@ -1,11 +1,9 @@
 # 🌸 TODO-my-dashboard
 
-[English](#english) | [中文](#chinese)
 
----
+[🇨🇳 中文版](README_zh.md)
 
-<a name="english"></a>
-## English Version
+
 
 A lightweight **personal productivity dashboard** (Task Pool + Timeline + Long-term Plans) built with **HTML/CSS/JavaScript**.
 
@@ -14,25 +12,3 @@ A lightweight **personal productivity dashboard** (Task Pool + Timeline + Long-t
 2. **Modify `schedule.js`** to customize your own classes and goals.
 3. Go to **Settings -> Pages**, select the `master` branch and click **Save**.
 4. Your dashboard will be live at `https://<your-username>.github.io/TODO-my-dashborad/`.
-
----
-
-<a name="chinese"></a>
-## 中文版
-
-一个基于 **HTML/CSS/JS** 的轻量级个人效率仪表盘。结合了 **任务池 + 时间轴 + 长期计划** 的管理逻辑，特别适合大学生管理课程与复习进度。
-
-### 🚀 快速拥有你的版本 (部署指引)
-1. **Fork 本项目**：点击页面右上角的 `Fork` 按钮。
-2. **修改数据**：
-   - 打开 `schedule.js`。
-   - 找到 `initialData` 部分，把里面的课程名、时间、长期目标改成你自己的。
-3. **启用网页**：
-   - 在你 Fork 后的仓库进入 `Settings` -> `Pages`。
-   - 分支选择 `master`，点击 `Save`。
-4. **大功告成**：等待一分钟，访问生成的链接即可！
-
-### 🛠️ 功能亮点
-- **⏱️ 时间轴拖拽**：支持从左侧直接将任务拖入具体时间段。
-- **🚀 目标拆解**：长期计划可一键拆解为今日任务，并自动按 DDL 排序。
-- **🎁 奖励商店**：完成任务赚取积分，兑换自定义的小奖励。
